@@ -43,7 +43,7 @@ bool Adafruit_BME280::begin(uint8_t a) {
 
   if (_cs == -1) {
     // i2c
-    Wire.begin();
+    Wire.begin(0,2); // Modification for usage of I2C with SDA GPIO0 et SCL GPIO2
   } else {
     digitalWrite(_cs, HIGH);
     pinMode(_cs, OUTPUT);
