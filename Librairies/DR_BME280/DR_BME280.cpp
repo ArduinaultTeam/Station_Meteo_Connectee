@@ -1,3 +1,9 @@
+/* 
+Modification done by DR for I2C usage on ESP8266
+SDA GPIO0
+SCL GPIO2
+*/
+
 /***************************************************************************
   This is a library for the BME280 humidity, temperature & pressure sensor
 
