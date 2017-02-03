@@ -9,4 +9,5 @@ Temperature (°C)
 Humidity
 Pressure
 
-David RAY / 31-01-17
+Use I2CScanner to identified adresse
+Adresse for BME280 : 0x057
