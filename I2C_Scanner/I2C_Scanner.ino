@@ -36,7 +36,7 @@
  
 void setup()
 {
-  Wire.begin(0,2);
+  Wire.begin(0,2); // modified for I2C GPIO - in case of ARDUINO : Wire.begin();
  
   Serial.begin(9600);
   while (!Serial);             // Leonardo: wait for serial monitor
