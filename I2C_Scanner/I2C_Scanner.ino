@@ -1,3 +1,7 @@
+//I2C Scanner Adapated for ESP8266
+// SDA on GPIO0
+// SCL on GPIO2
+
 // --------------------------------------
 // i2c_scanner
 //
@@ -32,11 +36,13 @@
  
 void setup()
 {
-  Wire.begin();
+  Wire.begin(0,2);
  
   Serial.begin(9600);
   while (!Serial);             // Leonardo: wait for serial monitor
   Serial.println("\nI2C Scanner");
+  Serial.println("\nI2C looking for I2C components with");
+  Serial.println("\nSDA on GPIO0 & SCL on GPIO2");
 }
  
  
@@ -45,6 +51,8 @@ void loop()
   byte error, address;
   int nDevices;
  
+  Serial.println("I2C looking for I2C components with");
+  Serial.println("SDA on GPIO0 & SCL on GPIO2");
   Serial.println("Scanning...");
  
   nDevices = 0;
@@ -58,7 +66,7 @@ void loop()
  
     if (error == 0)
     {
-      Serial.print("I2C device found at address 0x");
+      Serial.print("\nI2C device found at address 0x");
       if (address<16)
         Serial.print("0");
       Serial.print(address,HEX);
