@@ -3,7 +3,7 @@
  * Connected to
  * SDA GPIO0
  * SCL GPIO2
- * 
+ * Modification done directly in the Librairy
  */
 
 /***************************************************************************
