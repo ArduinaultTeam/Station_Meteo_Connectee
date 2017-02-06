@@ -2,6 +2,8 @@
   Development done by David Ray
 
  Usage of the BME280 with the ESP 8266 and protocol I2C
+
+ Feb 2017
  
  ***************************************************************************/
 
