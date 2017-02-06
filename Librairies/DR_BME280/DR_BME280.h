@@ -1,4 +1,5 @@
-/***************************************************************************
+/* Modification Done Adafruit vs DR */
+ /***************************************************************************
   This is a library for the BME280 humidity, temperature & pressure sensor
 
   Designed specifically to work with the Adafruit BME280 Breakout
@@ -103,10 +104,10 @@
 /*=========================================================================*/
 
 /*
-class Adafruit_BME280_Unified : public Adafruit_Sensor
+class DR_BME280_Unified : public Adafruit_Sensor
 {
   public:
-    Adafruit_BME280_Unified(int32_t sensorID = -1);
+    DR_BME280_Unified(int32_t sensorID = -1);
 
     bool  begin(uint8_t addr = BME280_ADDRESS);
     void  getTemperature(float *temp);
@@ -123,12 +124,12 @@ class Adafruit_BME280_Unified : public Adafruit_Sensor
 
 */
 
-class Adafruit_BME280
+class DR_BME280
 {
   public:
-    Adafruit_BME280(void);
-    Adafruit_BME280(int8_t cspin);
-    Adafruit_BME280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin);
+    DR_BME280(void);
+    DR_BME280(int8_t cspin);
+    DR_BME280(int8_t cspin, int8_t mosipin, int8_t misopin, int8_t sckpin);
 
     bool  begin(uint8_t addr = BME280_ADDRESS);
     float readTemperature(void);
