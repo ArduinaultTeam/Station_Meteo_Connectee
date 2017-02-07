@@ -33,3 +33,39 @@ void setup()
   serveur.begin();
   Serial.print("Pret !");
 }
+
+void loop()
+{
+  // Regarde si un client est connecté et attend une réponse
+  EthernetClient client = serveur.available();
+  if (client) {
+    // Quelqu'un est connecté !
+    Serial.print("On envoi !");
+    // On fait notre en-tête
+    // Tout d'abord le code de réponse 200 = réussite
+    client.println("HTTP/1.1 200 OK");
+    // Puis le type mime du contenu renvoyé, du json
+    client.println("Content-Type: application/json");
+    // Et c'est tout !
+    // On envoie une ligne vide pour signaler la fin du header
+    client.println();
+
+    // Puis on commence notre JSON par une accolade ouvrante
+    client.println("{");
+    // On envoie la première clé : "uptime"
+    client.print("\t\"uptime (ms)\": ");
+    // Puis la valeur de l'uptime
+    client.print(millis());
+    //Une petite virgule pour séparer les deux clés
+    client.println(",");
+    // Et on envoie la seconde nommée "analog 0"
+    client.print("\t\"analog 0\": ");
+    client.println(analogRead(A0));
+    // Et enfin on termine notre JSON par une accolade fermante
+    client.println("}");
+    // Donne le temps au client de prendre les données
+    delay(10);
+    // Ferme la connexion avec le client
+    client.stop();
+  }
+}
