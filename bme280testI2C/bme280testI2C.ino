@@ -1,3 +1,5 @@
+#include <SPI.h>
+
 /*
  * Adapatation done by D. Ray for BME280 on ESP8266
  * Connected to
@@ -35,7 +37,7 @@
 
 #define SEALEVELPRESSURE_HPA (1013.25)
 
-Adafruit_BME280 bme;
+DR_BME280 bme;
 // I2C
 //Adafruit_BME280 bme(BME_CS); // hardware SPI
 //Adafruit_BME280 bme(BME_CS, BME_MOSI, BME_MISO,  BME_SCK);
