@@ -1,4 +1,4 @@
-#include <SPI.h>
+//#include <SPI.h>
 
 /***************************************************************************
   Development done by David Ray
@@ -14,10 +14,9 @@
 /* Connection information */
 #define SDA_PIN 0
 #define SCL_PIN 2
-#define BME_ADDRESS (0x76)
+#define BME280_ADDRESS (0x76)
 
 #define SEALEVELPRESSURE_HPA (1013.25)
-
 /*=========================================================================
     REGISTERS
     -----------------------------------------------------------------------*/
@@ -86,21 +85,62 @@
       int16_t  dig_H5;
       int8_t   dig_H6;
     } bme280_calib_data;
-/*=========================================================================*/
+/* =========================================================================*/
 
+unsigned char read8 (byte i2caddr,byte reg)
+{
+  unsigned char value;
+  Wire.beginTransmission((unsigned char) i2caddr);
+  Wire.write((byte)reg);
+  Wire.endTransmission();
+  Wire.requestFrom((unsigned char)i2caddr,(byte)1);
+  value=Wire.read();
+return value;
+}
+
+int read16 (byte i2caddr,byte reg)
+{
+  int value;
+  Wire.beginTransmission((unsigned char) i2caddr);
+  Wire.write((unsigned char)reg);
+  Wire.endTransmission();
+  Wire.requestFrom((unsigned char)i2caddr,(byte)2);
+  value=Wire.read()<<8 | Wire.read();
+return value;
+}
+
+void write8 (byte i2caddr,byte reg,byte value)
+{
+  Wire.beginTransmission((unsigned char) i2caddr);
+  Wire.write((byte)reg);
+  Wire.write((byte)value);
+  Wire.endTransmission();
+  }
+
+void readCoefficients() {
+}
 
 void setup() {
   Serial.begin(9600);
-  Serial.println(F("BME280 test"));
-  Wire.begin(SDA_PIN,SCL_PIN);
-
-  if (!bme.begin()) {
-    Serial.println("Could not find a valid BME280 sensor, check wiring!");
-    while (1);
+  Serial.println("BME280 test done by D. RAY");
+  Wire.begin(SDA_PIN,SCL_PIN); // Ouverture de l'I2C
+  if (read8(BME280_ADDRESS,BME280_REGISTER_CHIPID)!= 0x60)
+    { Serial.println("BME Non Détecté");
+      while (1);
+    }
+  Serial.println("BME280 detected");    
+  write8(BME280_ADDRESS,BME280_REGISTER_CONTROLHUMID,0x05);
+  Serial.println("Configuration du BME280 / 16x oversampling pou l'humidité");
+  write8(BME280_ADDRESS,BME280_REGISTER_CONTROL,0xB7);
+  Serial.println("Configuration du BME280 / 16x oversampling pour la Température et la pression");
+  
+  
   }
-}
 
 void loop() {
+  
+  /*
+  
     Serial.print("Temperature = ");
     Serial.print(bme.readTemperature());
     Serial.println(" *C");
@@ -119,5 +159,8 @@ void loop() {
     Serial.println(" %");
 
     Serial.println();
-    delay(2000);
+    delay(2000);*/
 }
+
+
+
