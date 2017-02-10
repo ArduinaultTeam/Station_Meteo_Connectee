@@ -310,7 +310,7 @@ float seaLevelForAltitude(float altitude, float atmospheric)
 void setup() {
   Serial.begin(9600);
   Serial.println("BME280 test done by D. RAY");
-  Wire.begin(); // Ouverture de l'I2C */
+  Wire.begin((int)SDA_PIN,(int)SCL_PIN); // Ouverture de l'I2C */
   if (read8(BME280_ADDRESS,BME280_REGISTER_CHIPID)!= 0x60)
     { Serial.println("BME Non Détecté");
       while (1);
