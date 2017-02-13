@@ -12,7 +12,7 @@
 
 // Connection WIFI
 // replace with your channel’s thingspeak API key,
-String apiKey = "NKG43QG3K4KNOQEH";
+String apiKey = "W70U681ECEPAQ19J";
 const char* ssid = "JJnet";
 const char* password = "CamilleEmilie";
 /* frequence d'envoi de données (en minutes) 
@@ -366,16 +366,16 @@ void write_on_thingspeak(float t, float h, float p)
     Serial.print(t);
     Serial.print(" degrees Celcius Humidity: ");
     Serial.print(h);
-    Serial.println("% pressure: ");
+    Serial.println(" % pressure: ");
     Serial.print(p);
-    Serial.println("hpa send to Thingspeak");
+    Serial.println(" hpa send to Thingspeak");
     }
   client.stop();
   Serial.println("Waiting…");
   }
 
 void loop() {
-  write_on_thingspeak(readTemperature(), readHumidity(), readPressure());
+  write_on_thingspeak(readTemperature(), readHumidity(), readPressure()/ 100.0F);
  // thingspeak needs minimum 15 sec delay between updates
   delay((temps_attente*60)*1000);
   /*
