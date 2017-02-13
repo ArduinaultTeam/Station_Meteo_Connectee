@@ -86,7 +86,9 @@
       int8_t   dig_H6;
     } bme280_calib_data;
 /* =========================================================================*/
+
 bme280_calib_data bme280_calib;
+
 signed short t_fine;
 
 unsigned char read8 (byte i2caddr,byte reg)
@@ -182,22 +184,18 @@ void readCoefficients() {
     bme280_calib.dig_H5 = (read8(BME280_ADDRESS,BME280_REGISTER_DIG_H5+1) << 4) | (read8(BME280_ADDRESS,BME280_REGISTER_DIG_H5) >> 4);
     bme280_calib.dig_H6 = (char)read8(BME280_ADDRESS,BME280_REGISTER_DIG_H6);
 }
+
 float readTemperature(void)
 {
-  signed int var1, var2;
-
-  signed int adc_T = read24(BME280_ADDRESS,BME280_REGISTER_TEMPDATA);
+  int var1, var2;
+  int adc_T = read24(BME280_ADDRESS,BME280_REGISTER_TEMPDATA);
   adc_T >>= 4;
-
-  var1  = ((((adc_T>>3) - ((signed int)bme280_calib.dig_T1 <<1))) *
-     ((signed int)bme280_calib.dig_T2)) >> 11;
-
-  var2  = (((((adc_T>>4) - ((signed int)bme280_calib.dig_T1)) *
-       ((adc_T>>4) - ((signed int)bme280_calib.dig_T1))) >> 12) *
-     ((signed int)bme280_calib.dig_T3)) >> 14;
-
+  var1  = ((((adc_T>>3) - ((int)bme280_calib.dig_T1 <<1))) *
+     ((int)bme280_calib.dig_T2)) >> 11;
+  var2  = (((((adc_T>>4) - ((int)bme280_calib.dig_T1)) *
+       ((adc_T>>4) - ((int)bme280_calib.dig_T1))) >> 12) *
+     ((int)bme280_calib.dig_T3)) >> 14;
   t_fine = var1 + var2;
-
   float T  = (t_fine * 5 + 128) >> 8;
   return T/100;
 }
@@ -208,30 +206,24 @@ float readTemperature(void)
 */
 /**************************************************************************/
 float readPressure(void) {
-  signed long var1, var2, p;
-
+  signed long long var1, var2, p;
   readTemperature(); // must be done first to get t_fine
-
-  int32_t adc_P = read24(BME280_ADDRESS,BME280_REGISTER_PRESSUREDATA);
+  int adc_P = read24(BME280_ADDRESS,BME280_REGISTER_PRESSUREDATA);
   adc_P >>= 4;
-
-  var1 = ((signed long)t_fine) - 128000;
-  var2 = var1 * var1 * (signed long)bme280_calib.dig_P6;
-  var2 = var2 + ((var1*(signed long)bme280_calib.dig_P5)<<17);
-  var2 = var2 + (((signed long)bme280_calib.dig_P4)<<35);
-  var1 = ((var1 * var1 * (signed long)bme280_calib.dig_P3)>>8) +
-    ((var1 * (signed long)bme280_calib.dig_P2)<<12);
-  var1 = (((((signed long)1)<<47)+var1))*((signed long)bme280_calib.dig_P1)>>33;
-
+  var1 = ((signed long long)t_fine) - 128000;
+  var2 = var1 * var1 * (signed long long)bme280_calib.dig_P6;
+  var2 = var2 + ((var1*(signed long long)bme280_calib.dig_P5)<<17);
+  var2 = var2 + (((signed long long)bme280_calib.dig_P4)<<35);
+  var1 = ((var1 * var1 * (signed long long)bme280_calib.dig_P3)>>8) + ((var1 * (signed long long)bme280_calib.dig_P2)<<12);
+  var1 = (((((signed long long)1)<<47)+var1))*((signed long long)bme280_calib.dig_P1)>>33;
   if (var1 == 0) {
     return 0;  // avoid exception caused by division by zero
   }
   p = 1048576 - adc_P;
   p = (((p<<31) - var2)*3125) / var1;
-  var1 = (((signed long)bme280_calib.dig_P9) * (p>>13) * (p>>13)) >> 25;
-  var2 = (((signed long)bme280_calib.dig_P8) * p) >> 19;
-
-  p = ((p + var1 + var2) >> 8) + (((signed long)bme280_calib.dig_P7)<<4);
+  var1 = (((signed long long)bme280_calib.dig_P9) * (p>>13) * (p>>13)) >> 25;
+  var2 = (((signed long long)bme280_calib.dig_P8) * p) >> 19;
+  p = ((p + var1 + var2) >> 8) + (((signed long long)bme280_calib.dig_P7)<<4);
   return (float)p/256;
 }
 
