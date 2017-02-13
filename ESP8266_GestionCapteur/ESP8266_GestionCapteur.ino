@@ -89,63 +89,63 @@
 
 bme280_calib_data bme280_calib;
 
-signed short t_fine;
+int64_t t_fine;
 
-unsigned char read8 (byte i2caddr,byte reg)
+uint8_t read8 (uint8_t i2caddr,uint8_t reg)
 {
-  unsigned char value;
-  Wire.beginTransmission((unsigned char) i2caddr);
-  Wire.write((byte)reg);
+  uint8_t value;
+  Wire.beginTransmission((uint8_t) i2caddr);
+  Wire.write((uint8_t)reg);
   Wire.endTransmission();
-  Wire.requestFrom((unsigned char)i2caddr,(byte)1);
+  Wire.requestFrom((uint8_t)i2caddr,(byte)1);
   value=Wire.read();
 return value;
 }
 
 // Procedure lecture sur 16 bits
-unsigned short read16 (byte i2caddr,byte reg)
+uint16_t read16 (uint8_t i2caddr,uint8_t reg)
 {
-  unsigned short value;
-  Wire.beginTransmission((unsigned char) i2caddr);
-  Wire.write((unsigned char)reg);
+  uint16_t value;
+  Wire.beginTransmission((uint8_t) i2caddr);
+  Wire.write((uint8_t)reg);
   Wire.endTransmission();
-  Wire.requestFrom((unsigned char)i2caddr,(byte)2);
+  Wire.requestFrom((uint8_t)i2caddr,(byte)2);
   value=Wire.read()<<8 | Wire.read();
 return value;
 }
 
 // Procedure pour inversion Bit Faible/Fort - pour 16 bits
-unsigned short read16_LE (byte i2caddr,byte reg)
+uint16_t read16_LE (uint8_t i2caddr,uint8_t reg)
 {
-  unsigned short temp;
+  uint16_t temp;
   temp = read16 (i2caddr,reg);
   return (temp >> 8) | (temp << 8);
 }
 
 // Procedure pour Signed int 16 avec inversion Faible et Fort
-signed short readS16_LE (byte i2caddr,byte reg)
+int16_t readS16_LE (uint8_t i2caddr,uint8_t reg)
 {
-  signed short temp;
-  temp = (signed short) read16 (i2caddr,reg);
+  int16_t temp;
+  temp = (int16_t) read16 (i2caddr,reg);
   return (temp >> 8) | (temp << 8);
 }
 
 // Procedure pour Signed int 16
-signed short readS16 (byte i2caddr,byte reg)
+int16_t readS16 (uint8_t i2caddr,uint8_t reg)
 {
-  signed short value;
-  value =(signed short) read16 (i2caddr,reg);
+  int16_t value;
+  value =(int16_t) read16 (i2caddr,reg);
   return value;
 }
 
 // Procedure pour Signed int 16
-unsigned short read24 (byte i2caddr,byte reg)
+uint32_t read24 (uint8_t i2caddr,uint8_t reg)
 {
-  unsigned short value;
-  Wire.beginTransmission((unsigned char) i2caddr);
-  Wire.write((unsigned char)reg);
+  uint32_t value;
+  Wire.beginTransmission((uint8_t) i2caddr);
+  Wire.write((uint8_t)reg);
   Wire.endTransmission();
-  Wire.requestFrom((unsigned char)i2caddr,(byte)3);
+  Wire.requestFrom((uint8_t)i2caddr,(byte)3);
   value=Wire.read();
   value <<=8;
   value |= Wire.read();
@@ -154,10 +154,10 @@ unsigned short read24 (byte i2caddr,byte reg)
   return value;
 }
 
-void write8 (byte i2caddr,byte reg,byte value)
+void write8 (uint8_t i2caddr,uint8_t reg,byte value)
 {
-  Wire.beginTransmission((unsigned char) i2caddr);
-  Wire.write((byte)reg);
+  Wire.beginTransmission((uint8_t) i2caddr);
+  Wire.write((uint8_t)reg);
   Wire.write((byte)value);
   Wire.endTransmission();
   }
@@ -237,20 +237,20 @@ float readHumidity(void) {
 
   readTemperature(); // must be done first to get t_fine
 
-  signed int adc_H = read16(BME280_ADDRESS,BME280_REGISTER_HUMIDDATA);
+  int32_t adc_H = read16(BME280_ADDRESS,BME280_REGISTER_HUMIDDATA);
 
-  signed int v_x1_u32r;
+  int32_t v_x1_u32r;
 
-  v_x1_u32r = (t_fine - ((signed int)76800));
+  v_x1_u32r = (t_fine - ((int32_t)76800));
 
-  v_x1_u32r = (((((adc_H << 14) - (((signed int)bme280_calib.dig_H4) << 20) -
-      (((unsigned short)bme280_calib.dig_H5) * v_x1_u32r)) + ((signed int)16384)) >> 15) *
-         (((((((v_x1_u32r * ((signed int)bme280_calib.dig_H6)) >> 10) *
-        (((v_x1_u32r * ((unsigned short)bme280_calib.dig_H3)) >> 11) + ((signed int)32768))) >> 10) +
-      ((signed int)2097152)) * ((signed int)bme280_calib.dig_H2) + 8192) >> 14));
+  v_x1_u32r = (((((adc_H << 14) - (((int32_t)bme280_calib.dig_H4) << 20) -
+      (((uint32_t)bme280_calib.dig_H5) * v_x1_u32r)) + ((int32_t)16384)) >> 15) *
+         (((((((v_x1_u32r * ((int32_t)bme280_calib.dig_H6)) >> 10) *
+        (((v_x1_u32r * ((uint32_t)bme280_calib.dig_H3)) >> 11) + ((int32_t)32768))) >> 10) +
+      ((int32_t)2097152)) * ((int32_t)bme280_calib.dig_H2) + 8192) >> 14));
 
   v_x1_u32r = (v_x1_u32r - (((((v_x1_u32r >> 15) * (v_x1_u32r >> 15)) >> 7) *
-           ((signed int)bme280_calib.dig_H1)) >> 4));
+           ((int32_t)bme280_calib.dig_H1)) >> 4));
 
   v_x1_u32r = (v_x1_u32r < 0) ? 0 : v_x1_u32r;
   v_x1_u32r = (v_x1_u32r > 419430400) ? 419430400 : v_x1_u32r;
