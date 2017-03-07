@@ -1,3 +1,6 @@
+/*Station meteo connectée
+Auteur: Laurent*/
+
 // Ces deux bibliothèques sont indispensables pour le shield
 #include <SPI.h>
 #include <Ethernet.h>
