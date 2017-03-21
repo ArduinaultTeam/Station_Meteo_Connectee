@@ -19,8 +19,8 @@
 *************************************************************************************/
 
 /***********  Ajout de bibliothèque  ************************************************/
-#include <dht.h> //Librairie pour le capteur DHT http://arduino.cc/playground/Main/DHTLib
-#include "Network_Setting.h" //Network settings: ssid & password in separate file
+#include <dht.h> //Librairie pour le capteur DHT: http://arduino.cc/playground/Main/DHTLib
+#include "Network_Setting.h" //Network settings: SSID & password in separate file
 #include <ESP8266WiFi.h>
 
 /***********  Déclaration des CONSTANTES  *******************************************/
@@ -41,10 +41,9 @@ bool SSID_defined = false;  //define if network is configured
 void setup() {
   //On ouvre un connexion série pour le terminal
   Serial.begin(115200);
-  Serial.println("Programme Station Meteo initialisée");
-  Serial.println();
+  Serial.println("Programme Station Meteo initialisée\n");
 
-  // Set WiFi to station mode and disconnect from an AP if it was previously connected
+  // Set WiFi to station mode and disconnect from an Access Point if it was previously connected
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
